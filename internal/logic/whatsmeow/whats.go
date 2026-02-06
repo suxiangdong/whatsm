@@ -56,7 +56,9 @@ func (s *sWhats) Init(ctx context.Context) error {
 func (s *sWhats) LoginPair(ctx context.Context, in *model.LoginPairInput) (*model.LoginPairOutput, error) {
 	limit := consts.MaxUserDefault
 	if maxUser, err := g.Cfg().Get(ctx, consts.AutoMarkMessageKey); err == nil {
-		limit = maxUser.Int()
+		if maxUser.Int() != 0 {
+			limit = maxUser.Int()
+		}
 	}
 	if len(s.sessions) >= limit {
 		return nil, gerror.NewCode(gcode.New(1001, "login users limit", nil))
