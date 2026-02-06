@@ -54,6 +54,13 @@ func (s *sWhats) Init(ctx context.Context) error {
 
 // create new device&session
 func (s *sWhats) LoginPair(ctx context.Context, in *model.LoginPairInput) (*model.LoginPairOutput, error) {
+	limit := consts.MaxUserDefault
+	if maxUser, err := g.Cfg().Get(ctx, consts.AutoMarkMessageKey); err == nil {
+		limit = maxUser.Int()
+	}
+	if len(s.sessions) >= limit {
+		return nil, gerror.NewCode(gcode.New(1001, "login users limit", nil))
+	}
 	jid := types.NewADJID(in.Phone, 0, 1)
 	st, err := s.c.GetDevice(ctx, jid)
 	if err != nil {
@@ -103,9 +110,6 @@ func (s *sWhats) LoginPair(ctx context.Context, in *model.LoginPairInput) (*mode
 	// ensure websocket is ok
 	qrCode := <-qrChan
 
-	//code, err := client.PairPhone(context.Background(), "15812751933", true, whatsmeow.PairClientChrome, "Chrome (Linux)")
-	//code, err := client.PairPhone(context.Background(), "15875440003", true, whatsmeow.PairClientChrome, "Chrome (Linux)")
-	//code, err := client.PairPhone(context.Background(), "+15812751390", true, whatsmeow.PairClientChrome, "Chrome (Linux)")
 	code, err := client.PairPhone(ctx, in.Phone, true, whatsmeow.PairClientChrome, consts.ClientDisplayNameDefault)
 	if err != nil {
 		if errors.Is(err, whatsmeow.ErrIQRateOverLimit) {

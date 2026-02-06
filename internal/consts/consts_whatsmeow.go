@@ -17,4 +17,7 @@ const (
 
 	ClientDisplayNameDefault   = "Chrome (Linux)"
 	ClientDisplayNameConfigKey = "whatsmeow.clientDisplayName"
+
+	MaxUserDefault   = 200
+	MaxUserConfigKey = "whatsmeow.maxUser"
 )
