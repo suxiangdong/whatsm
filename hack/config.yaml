@@ -1,0 +1,17 @@
+
+# CLI tool, only in development environment.
+# https://goframe.org/docs/cli
+gfcli:
+  build:
+    name: "whatsm"
+    arch: "amd64,arm64"
+    system: "darwin"
+    cgo: true
+    packSrc: "manifest/config"
+    path: "./bin"
+    version:  "v1.0.0"
+
+  docker:
+    build: "-a amd64 -s linux -p temp -ew"
+    tagPrefixes:
+      - my.image.pub/my-app
