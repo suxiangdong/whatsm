@@ -9,6 +9,7 @@ import (
 	"github.com/gogf/gf/v2/util/gconv"
 	"whatsm/internal/consts"
 	"whatsm/internal/controller/whats"
+	"whatsm/internal/service"
 )
 
 type Main struct {
@@ -23,6 +24,9 @@ type cStartInput struct {
 type CStartOutput struct{}
 
 func (m *Main) Start(ctx context.Context, in cStartInput) (out *CStartOutput, err error) {
+	if err = service.Whats().Init(ctx); err != nil {
+		return nil, err
+	}
 	if in.CfgFile != "" {
 		g.Cfg().GetAdapter().(*gcfg.AdapterFile).SetFileName(in.CfgFile)
 	}

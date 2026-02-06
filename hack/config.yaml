@@ -4,8 +4,8 @@
 gfcli:
   build:
     name: "whatsm"
-    arch: "amd64,arm64"
-    system: "darwin"
+    arch: "amd64"
+    system: "linux"
     cgo: true
     packSrc: "manifest/config"
     path: "./bin"

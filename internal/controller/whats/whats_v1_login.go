@@ -13,5 +13,5 @@ func (c *ControllerV1) Login(ctx context.Context, req *v1.LoginReq) (res *v1.Log
 	if err != nil {
 		return nil, err
 	}
-	return &v1.LoginRes{Code: out.Code}, nil
+	return &v1.LoginRes{Code: out.Code, QrCode: out.QrCode}, nil
 }
