@@ -3,7 +3,7 @@ package v1
 import "github.com/gogf/gf/v2/frame/g"
 
 type LoginReq struct {
-	g.Meta `path:"/whats/login" tags:"whats" method:"post" sm:"登录"`
+	g.Meta `path:"/whats/login" tags:"whats" method:"post" sm:"登录" dc:"用户登录，最多同时登录N（默认200，可以在应用的配置文件设置）个账号。本接口有两个特殊code码，1000代表被whats官方限制（overlimit），1001代表登录的账号数量达到上限"`
 	Phone  string `json:"phone" v:"required" dc:"手机号，带区号，不带+号"`
 	Proxy  string `json:"proxy" dc:"代理地址，示例：socks5://root:aasd1123@127.0.0.1:10808"`
 }
