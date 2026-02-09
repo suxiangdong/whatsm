@@ -12,3 +12,12 @@ type LoginRes struct {
 	Code   string `json:"code" dc:"pair code"`
 	QrCode string `json:"qrCode" dc:"二维码"`
 }
+
+type LoginCheckReq struct {
+	g.Meta `path:"/whats/login_check" tags:"whats" method:"get" sm:"检查登录" dc:"根据手机号检查账号是否登录"`
+	Phone  string `json:"phone" v:"required" dc:"手机号，带区号，不带+号"`
+}
+
+type LoginCheckRes struct {
+	IsLogin bool `json:"IsLogin" dc:"是否登录"`
+}

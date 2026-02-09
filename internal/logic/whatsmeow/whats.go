@@ -32,6 +32,15 @@ func New() service.IWhats {
 	return &sWhats{sessions: make(map[string]*session), mu: sync.Mutex{}}
 }
 
+// 检查账号是否登录
+func (s *sWhats) IsWhatsAccountLogin(ctx context.Context, phone string) bool {
+	sess, ok := s.sessions[phone]
+	if !ok {
+		return false
+	}
+	return sess.cli.IsLoggedIn()
+}
+
 // Init connect to db
 func (s *sWhats) Init(ctx context.Context) error {
 	s.ctx = ctx
