@@ -2,7 +2,6 @@ package whatsmeow
 
 import (
 	"context"
-	"fmt"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"go.mau.fi/whatsmeow/proto/waE2E"
@@ -25,7 +24,6 @@ func (s *sWhats) SendTextMessage(ctx context.Context, from, to, msg string) erro
 	if err != nil {
 		return gerror.Wrapf(err, "send msg failed")
 	}
-	fmt.Printf("消息发送成功! 消息ID: %s, 时间戳: %v\n", resp.ID, resp.Timestamp)
 	g.Log(consts.LogicLog).Debugf(ctx, "message: send success, messageId: %s, timestamp: %v, from: %s, to: %s", resp.ID, resp.Timestamp, from, to)
 	return nil
 }
