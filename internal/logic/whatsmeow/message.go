@@ -27,3 +27,20 @@ func (s *sWhats) SendTextMessage(ctx context.Context, from, to, msg string) erro
 	g.Log(consts.LogicLog).Debugf(ctx, "message: send success, messageId: %s, timestamp: %v, from: %s, to: %s", resp.ID, resp.Timestamp, from, to)
 	return nil
 }
+
+func (s *sWhats) SendGroupTextMessage(ctx context.Context, from, to, msg string) error {
+	if _, ok := s.sessions[from]; !ok {
+		return gerror.New("sender not found")
+	}
+	groupJID := types.NewJID(to, types.GroupServer)
+
+	message := &waE2E.Message{
+		Conversation: proto.String(msg),
+	}
+	resp, err := s.sessions[from].cli.SendMessage(ctx, groupJID, message)
+	if err != nil {
+		return gerror.Wrapf(err, "send group msg failed")
+	}
+	g.Log(consts.LogicLog).Debugf(ctx, "group message: send success, messageId: %s, timestamp: %v, from: %s, to: %s", resp.ID, resp.Timestamp, from, to)
+	return nil
+}

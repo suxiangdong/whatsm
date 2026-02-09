@@ -13,6 +13,7 @@ import (
 type (
 	IWhats interface {
 		SendTextMessage(ctx context.Context, from string, to string, msg string) error
+		SendGroupTextMessage(ctx context.Context, from string, to string, msg string) error
 		// 检查账号是否登录
 		IsWhatsAccountLogin(ctx context.Context, phone string) bool
 		// Init connect to db
