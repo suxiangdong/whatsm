@@ -19,5 +19,17 @@ type LoginCheckReq struct {
 }
 
 type LoginCheckRes struct {
-	IsLogin bool `json:"IsLogin" dc:"是否登录"`
+	IsLogin bool `json:"isLogin" dc:"是否登录"`
+}
+
+type LoggedInAccountsReq struct {
+	g.Meta `path:"/whats/logged_accounts" tags:"whats" method:"get" sm:"已登录账号" dc:"获取所有已登录账号"`
+}
+
+type Account struct {
+	Phone string `json:"phone"`
+}
+
+type LoggedInAccountsRes struct {
+	List []*Account `json:"list" dc:"登录账号列表"`
 }

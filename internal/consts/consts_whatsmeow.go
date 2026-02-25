@@ -20,4 +20,8 @@ const (
 
 	MaxUserDefault   = 200
 	MaxUserConfigKey = "whatsmeow.maxUser"
+
+	UploadFileImage = 1
+	UploadFileVideo = 2
+	UploadFileAudio = 3
 )

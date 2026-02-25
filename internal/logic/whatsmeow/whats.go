@@ -41,6 +41,18 @@ func (s *sWhats) IsWhatsAccountLogin(ctx context.Context, phone string) bool {
 	return sess.cli.IsLoggedIn()
 }
 
+// 获取所有已登录的账号
+func (s *sWhats) LoggedInAccounts() []string {
+	phones := make([]string, 0)
+	for p, sess := range s.sessions {
+		if !sess.cli.IsLoggedIn() {
+			continue
+		}
+		phones = append(phones, p)
+	}
+	return phones
+}
+
 // Init connect to db
 func (s *sWhats) Init(ctx context.Context) error {
 	s.ctx = ctx
@@ -64,7 +76,7 @@ func (s *sWhats) Init(ctx context.Context) error {
 // create new device&session
 func (s *sWhats) LoginPair(ctx context.Context, in *model.LoginPairInput) (*model.LoginPairOutput, error) {
 	limit := consts.MaxUserDefault
-	if maxUser, err := g.Cfg().Get(ctx, consts.AutoMarkMessageKey); err == nil {
+	if maxUser, err := g.Cfg().Get(ctx, consts.MaxUserConfigKey); err == nil {
 		if maxUser.Int() != 0 {
 			limit = maxUser.Int()
 		}

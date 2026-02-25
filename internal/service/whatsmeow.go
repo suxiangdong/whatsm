@@ -8,14 +8,22 @@ package service
 import (
 	"context"
 	"whatsm/internal/model"
+
+	"github.com/gogf/gf/v2/net/ghttp"
+	"go.mau.fi/whatsmeow"
 )
 
 type (
 	IWhats interface {
+		GetContactInfo(ctx context.Context, u string, t string) error
+		Upload(ctx context.Context, from string, typ int, uf *ghttp.UploadFile) (*whatsmeow.UploadResponse, error)
 		SendTextMessage(ctx context.Context, from string, to string, msg string) error
 		SendGroupTextMessage(ctx context.Context, from string, to string, msg string) error
+		SendMediaMessage(ctx context.Context, from string, to string, caption string, typ int, rsp *whatsmeow.UploadResponse) error
 		// 检查账号是否登录
 		IsWhatsAccountLogin(ctx context.Context, phone string) bool
+		// 获取所有已登录的账号
+		LoggedInAccounts() []string
 		// Init connect to db
 		Init(ctx context.Context) error
 		// create new device&session
