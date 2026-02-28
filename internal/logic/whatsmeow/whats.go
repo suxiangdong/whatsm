@@ -73,6 +73,13 @@ func (s *sWhats) Init(ctx context.Context) error {
 	return nil
 }
 
+func (s *sWhats) Logout(ctx context.Context, phone string) error {
+	if _, ok := s.sessions[phone]; !ok {
+		return nil
+	}
+	return s.sessions[phone].cli.Logout(ctx)
+}
+
 // create new device&session
 func (s *sWhats) LoginPair(ctx context.Context, in *model.LoginPairInput) (*model.LoginPairOutput, error) {
 	limit := consts.MaxUserDefault

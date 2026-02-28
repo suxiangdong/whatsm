@@ -25,6 +25,7 @@ type (
 		LoggedInAccounts() []string
 		// Init connect to db
 		Init(ctx context.Context) error
+		Logout(ctx context.Context, phone string) error
 		// create new device&session
 		LoginPair(ctx context.Context, in *model.LoginPairInput) (*model.LoginPairOutput, error)
 	}

@@ -13,6 +13,13 @@ type LoginRes struct {
 	QrCode string `json:"qrCode" dc:"二维码"`
 }
 
+type LogoutReq struct {
+	g.Meta `path:"/whats/logout" tags:"whats" method:"post" sm:"登出" dc:"用户登出"`
+	Phone  string `json:"phone" v:"required" dc:"手机号，带区号，不带+号"`
+}
+
+type LogoutRes struct{}
+
 type LoginCheckReq struct {
 	g.Meta `path:"/whats/login_check" tags:"whats" method:"get" sm:"检查登录" dc:"根据手机号检查账号是否登录"`
 	Phone  string `json:"phone" v:"required" dc:"手机号，带区号，不带+号"`
