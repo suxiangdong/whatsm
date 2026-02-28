@@ -2,14 +2,16 @@ package whatsmeow
 
 import (
 	"context"
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"go.mau.fi/whatsmeow"
 	"io"
 	"whatsm/internal/consts"
+	"whatsm/internal/model"
 )
 
-func (s *sWhats) Upload(ctx context.Context, from string, typ int, uf *ghttp.UploadFile) (*whatsmeow.UploadResponse, error) {
+func (s *sWhats) Upload(ctx context.Context, from string, typ int, uf *ghttp.UploadFile) (*model.UploadOutput, error) {
 	mediaType := whatsmeow.MediaType("")
 	switch typ {
 	case consts.UploadFileImage:
@@ -29,6 +31,10 @@ func (s *sWhats) Upload(ctx context.Context, from string, typ int, uf *ghttp.Upl
 		return nil, gerror.Wrap(err, `UploadFile.Open failed`)
 	}
 	defer file.Close()
+	mType, err := mimetype.DetectReader(file)
+	if err != nil {
+		return nil, gerror.Wrap(err, "detect mimeType failed")
+	}
 	c, err := io.ReadAll(file)
 	if err != nil {
 		return nil, gerror.Wrap(err, "io.ReadAll failed")
@@ -37,5 +43,5 @@ func (s *sWhats) Upload(ctx context.Context, from string, typ int, uf *ghttp.Upl
 	if err != nil {
 		return nil, gerror.Wrap(err, "WhatsApp upload file failed")
 	}
-	return &resp, nil
+	return &model.UploadOutput{Rsp: &resp, MimeType: mType.String()}, nil
 }

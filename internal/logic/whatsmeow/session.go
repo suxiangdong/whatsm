@@ -2,10 +2,13 @@ package whatsmeow
 
 import (
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gctx"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"
 	"reflect"
 	"whatsm/internal/consts"
+	"whatsm/internal/model"
+	"whatsm/internal/service"
 )
 
 type session struct {
@@ -159,6 +162,7 @@ func (s *session) handleQRScannedWithoutMultidevice(evt *events.QRScannedWithout
 
 // 处理客户端成功连接事件
 func (s *session) handleConnected(_ *events.Connected) {
+	_ = service.Hook().Trigger(gctx.New(), &model.HookData{Event: consts.EventLogin, Phone: s.cli.Store.ID.User})
 	g.Log(consts.LogicLog).Debugf(s.sw.ctx, "event: Connected, user: %s", s.cli.Store.ID.ADString())
 	s.sw.mu.Lock()
 	s.sw.sessions[s.cli.Store.ID.User] = s
@@ -187,6 +191,7 @@ func (s *session) handlePermanentDisconnect(evt events.PermanentDisconnect) {
 
 // 处理登出事件
 func (s *session) handleLoggedOut(evt *events.LoggedOut) {
+	_ = service.Hook().Trigger(gctx.New(), &model.HookData{Event: consts.EventLogout, Phone: s.cli.Store.ID.User, Message: evt.PermanentDisconnectDescription()})
 	g.Log(consts.LogicLog).Debugf(s.sw.ctx, "event: LoggedOut, user: %s, description:", s.cli.Store.ID.ADString(), evt.PermanentDisconnectDescription())
 	s.sw.mu.Lock()
 	delete(s.sw.sessions, s.cli.Store.ID.User)

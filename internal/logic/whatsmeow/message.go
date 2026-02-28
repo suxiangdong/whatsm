@@ -9,6 +9,7 @@ import (
 	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
 	"whatsm/internal/consts"
+	"whatsm/internal/model"
 )
 
 func (s *sWhats) SendTextMessage(ctx context.Context, from, to, msg string) error {
@@ -46,7 +47,7 @@ func (s *sWhats) SendGroupTextMessage(ctx context.Context, from, to, msg string)
 	return nil
 }
 
-func buildMediaMessage(typ int, caption string, response *whatsmeow.UploadResponse) (*waE2E.Message, error) {
+func buildMediaMessage(typ int, caption, mimeType string, response *whatsmeow.UploadResponse) (*waE2E.Message, error) {
 	switch typ {
 	case consts.UploadFileImage:
 		return &waE2E.Message{
@@ -55,7 +56,7 @@ func buildMediaMessage(typ int, caption string, response *whatsmeow.UploadRespon
 				URL:           proto.String(response.URL),
 				DirectPath:    proto.String(response.DirectPath),
 				MediaKey:      response.MediaKey,
-				Mimetype:      proto.String("image/jpeg"),
+				Mimetype:      proto.String(mimeType),
 				FileEncSHA256: response.FileEncSHA256,
 				FileSHA256:    response.FileSHA256,
 				FileLength:    proto.Uint64(response.FileLength),
@@ -67,19 +68,19 @@ func buildMediaMessage(typ int, caption string, response *whatsmeow.UploadRespon
 
 }
 
-func (s *sWhats) SendMediaMessage(ctx context.Context, from, to, caption string, typ int, rsp *whatsmeow.UploadResponse) error {
-	targetJID := types.NewJID(to, types.DefaultUserServer)
-	message, err := buildMediaMessage(typ, caption, rsp)
+func (s *sWhats) SendMediaMessage(ctx context.Context, in *model.SendMediaMessageInput) error {
+	targetJID := types.NewJID(in.To, types.DefaultUserServer)
+	message, err := buildMediaMessage(in.Type, in.Caption, in.MimeType, in.Rsp)
 	if err != nil {
 		return gerror.Wrap(err, "build media message failed")
 	}
-	if _, ok := s.sessions[from]; !ok {
+	if _, ok := s.sessions[in.From]; !ok {
 		return gerror.New("sender not found")
 	}
-	resp, err := s.sessions[from].cli.SendMessage(ctx, targetJID, message)
+	resp, err := s.sessions[in.From].cli.SendMessage(ctx, targetJID, message)
 	if err != nil {
 		return gerror.Wrapf(err, "send msg failed")
 	}
-	g.Log(consts.LogicLog).Debugf(ctx, "mediaMessage: send success, messageId: %s, timestamp: %v, from: %s, to: %s", resp.ID, resp.Timestamp, from, to)
+	g.Log(consts.LogicLog).Debugf(ctx, "mediaMessage: send success, messageId: %s, timestamp: %v, from: %s, to: %s", resp.ID, resp.Timestamp, in.From, in.To)
 	return nil
 }

@@ -14,6 +14,7 @@ type FileUploadReq struct {
 
 type FileUploadRes struct {
 	URL           string `json:"url"`
+	MimeType      string `json:"mimeType"`
 	DirectPath    string `json:"directPath"`
 	MediaKey      string `json:"mediaKey"`
 	FileEncSHA256 string `json:"fileEncSHA256"`

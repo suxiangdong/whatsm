@@ -33,6 +33,7 @@ func (m *Main) Start(ctx context.Context, in cStartInput) (out *CStartOutput, er
 	s := g.Server()
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.Middleware(ghttp.MiddlewareHandlerResponse)
+		group.Middleware(ghttp.MiddlewareCORS)
 		group.Bind(
 			whats.NewV1(),
 		)

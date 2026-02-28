@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"go.mau.fi/whatsmeow"
+	"whatsm/internal/model"
 	"whatsm/internal/service"
 
 	"whatsm/api/whats/v1"
@@ -24,13 +25,20 @@ func (c *ControllerV1) SendMediaMessage(ctx context.Context, req *v1.SendMediaMe
 	if err != nil {
 		return nil, gerror.Wrap(err, "hex decode fileEncSha256 failed")
 	}
-	if err := service.Whats().SendMediaMessage(ctx, req.From, req.To, req.Caption, req.Type, &whatsmeow.UploadResponse{
-		URL:           req.URL,
-		DirectPath:    req.DirectPath,
-		MediaKey:      mediaKey,
-		FileSHA256:    fileSha256,
-		FileEncSHA256: fileEncSha256,
-		FileLength:    req.FileLength,
+	if err := service.Whats().SendMediaMessage(ctx, &model.SendMediaMessageInput{
+		From:     req.From,
+		To:       req.To,
+		Type:     req.Type,
+		Caption:  req.Caption,
+		MimeType: req.MimeType,
+		Rsp: &whatsmeow.UploadResponse{
+			URL:           req.URL,
+			DirectPath:    req.DirectPath,
+			MediaKey:      mediaKey,
+			FileSHA256:    fileSha256,
+			FileEncSHA256: fileEncSha256,
+			FileLength:    req.FileLength,
+		},
 	}); err != nil {
 		return nil, err
 	}

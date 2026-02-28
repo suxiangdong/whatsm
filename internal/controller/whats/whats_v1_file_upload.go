@@ -14,11 +14,12 @@ func (c *ControllerV1) FileUpload(ctx context.Context, req *v1.FileUploadReq) (r
 		return nil, err
 	}
 	return &v1.FileUploadRes{
-		URL:           rsp.URL,
-		DirectPath:    rsp.DirectPath,
-		MediaKey:      hex.EncodeToString(rsp.MediaKey),
-		FileSHA256:    hex.EncodeToString(rsp.FileSHA256),
-		FileEncSHA256: hex.EncodeToString(rsp.FileEncSHA256),
-		FileLength:    rsp.FileLength,
+		MimeType:      rsp.MimeType,
+		URL:           rsp.Rsp.URL,
+		DirectPath:    rsp.Rsp.DirectPath,
+		MediaKey:      hex.EncodeToString(rsp.Rsp.MediaKey),
+		FileSHA256:    hex.EncodeToString(rsp.Rsp.FileSHA256),
+		FileEncSHA256: hex.EncodeToString(rsp.Rsp.FileEncSHA256),
+		FileLength:    rsp.Rsp.FileLength,
 	}, nil
 }

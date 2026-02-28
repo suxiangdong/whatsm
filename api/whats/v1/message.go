@@ -22,6 +22,7 @@ type SendGroupTextMessageRes struct{}
 
 type SendMediaMessageReq struct {
 	g.Meta        `path:"/whats/message/media/send" tags:"whats" method:"post" sm:"发送媒体消息"`
+	MimeType      string `json:"mimeType" v:"required" dc:"mime_type"`
 	Type          int    `json:"type" v:"required" dc:"媒体类型，1图片，2视频，3音频，当前仅支持图片"`
 	From          string `json:"from" v:"required" dc:"手机号，带区号，不带加号"`
 	To            string `json:"to" v:"required" dc:"群组号，示例：120363123456789012"`
