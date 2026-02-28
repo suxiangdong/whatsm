@@ -19,7 +19,7 @@ func init() {
 
 func New() service.IHook {
 	return &sHook{
-		c: gclient.New(),
+		c: gclient.New().ContentJson(),
 	}
 }
 
