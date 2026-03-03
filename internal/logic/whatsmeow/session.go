@@ -43,8 +43,8 @@ func (s *session) eventHandler(evt any) {
 	//	s.handleConnectFailure(v)
 	//case *events.TemporaryBan:
 	//	s.handleTemporaryBan(v)
-	//case *events.LoggedOut:
-	//	s.handleLoggedOut(v)
+	case *events.LoggedOut:
+		s.handleLoggedOut(v)
 	//case *events.StreamReplaced:
 	//	s.handleStreamReplaced(v)
 	//case *events.ClientOutdated:
@@ -235,7 +235,8 @@ func (s *session) handleStreamError(evt *events.StreamError) {
 }
 
 // 处理客户端断开连接事件
-func (s *session) handleDisconnected(_ *events.Disconnected) {
+func (s *session) handleDisconnected(evt *events.Disconnected) {
+	_ = service.Hook().Trigger(gctx.New(), &model.HookData{Event: consts.EventDisconnected, Phone: s.cli.Store.ID.User})
 	g.Log(consts.LogicLog).Debugf(s.sw.ctx, "event: Disconnected, user: %s", s.cli.Store.ID.ADString())
 	s.sw.mu.Lock()
 	delete(s.sw.sessions, s.cli.Store.ID.User)
